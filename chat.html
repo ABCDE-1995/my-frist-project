@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatboard with Global Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-box {
+            padding: 30px;
+            height: 400px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            font-size: 14px;
+        }
+        .user-message, .ai-message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: #fff;
+            align-self: flex-end;
+            cursor: pointer;
+        }
+        .ai-message {
+            background-color: #ddd;
+            color: #333;
+            align-self: flex-start;
+        }
+        .input-box {
+            display: flex;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-top: 1px solid #ddd;
+        }
+        .input-box input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+            resize: none;
+            overflow-y: hidden;
+            min-height: 40px;
+            height: auto;
+        }
+        .input-box button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .input-box button:hover {
+            background-color: #0056b3;
+        }
+        .clear-btn {
+            padding: 10px;
+            background-color: #ff5e5e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .clear-btn:hover {
+            background-color: #e04a4a;
+        }
+        .toggle-mode-btn {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .toggle-mode-btn:hover {
+            background-color: #555;
+        }
+        .emoji-picker-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .emoji-picker-item {
+            font-size: 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .reaction-btn {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .character-counter {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .scroll-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .scroll-btn:hover {
+            background-color: #0056b3;
+        }
+        .profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #888;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-box" id="chat-box">
+        <!-- Messages will appear here -->
+    </div>
+    <div class="input-box">
+        <input type="text" id="user-input" placeholder="Type your message..." oninput="updateCharacterCount()" />
+        <button onclick="sendMessage()">Send</button>
+        <button class="clear-btn" onclick="clearChat()">Clear</button>
+        <button class="toggle-mode-btn" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+    <div class="character-counter" id="character-counter">0/200 characters</div>
+    <div class="emoji-picker-container">
+        <span class="emoji-picker-item" onclick="addEmoji('😊')">😊</span>
+        <span class="emoji-picker-item" onclick="addEmoji('😂')">😂</span>
+        <span class="emoji-picker-item" onclick="addEmoji('😍')">😍</span>
+        <span class="emoji-picker-item" onclick="addEmoji('😎')">😎</span>
+        <span class="emoji-picker-item" onclick="addEmoji('🔥')">🔥</span>
+        <!-- Additional emojis -->
+        <span class="emoji-picker-item" onclick="addEmoji('😅')">😅</span>
+        <span class="emoji-picker-item" onclick="addEmoji('🥺')">🥺</span>
+        <span class="emoji-picker-item" onclick="addEmoji('❤️')">❤️</span>
+        <span class="emoji-picker-item" onclick="addEmoji('🤔')">🤔</span>
+        <span class="emoji-picker-item" onclick="addEmoji('👍')">👍</span>
+        <span class="emoji-picker-item" onclick="addEmoji('🎉')">🎉</span>
+        <span class="emoji-picker-item" onclick="addEmoji('😇')">😇</span>
+        <span class="emoji-picker-item" onclick="addEmoji('💀')">💀</span>
+        <span class="emoji-picker-item" onclick="addEmoji('😜')">😜</span>
+    </div>
+    <button class="scroll-btn" onclick="scrollToBottom()">Scroll to Bottom</button>
+</div>
+
+<script>
+    let userProfilePic = "https://www.w3schools.com/w3images/avatar2.png"; // Default profile pic
+
+    // Function to add selected emoji to the input field
+    function addEmoji(emoji) {
+        const userInputField = document.getElementById("user-input");
+        userInputField.value += emoji;
+        userInputField.focus();
+    }
+
+    // This function sends user messages and displays AI responses
+    async function sendMessage() {
+        const userInput = document.getElementById("user-input").value.trim();
+        if (userInput === "") return;
+
+        const chatBox = document.getElementById("chat-box");
+
+        // Get current timestamp
+        const timestamp = new Date().toLocaleTimeString();
+
+        // User message with profile picture and timestamp
+        const userMessageDiv = document.createElement("div");
+        userMessageDiv.classList.add("user-message");
+        userMessageDiv.innerHTML = `<img src="${userProfilePic}" class="profile-pic" />${userInput}<span class="timestamp">${timestamp}</span>`;
+        chatBox.appendChild(userMessageDiv);
+
+        // AI response (simulated for now)
+        const aiResponse = await getAIResponse(userInput);
+        const aiMessageDiv = document.createElement("div");
+        aiMessageDiv.classList.add("ai-message");
+        aiMessageDiv.textContent = aiResponse;
+        chatBox.appendChild(aiMessageDiv);
+
+        // Scroll chat to bottom
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Clear input field
+        document.getElementById("user-input").value = "";
+    }
+
+    // Function to update character count
+    function updateCharacterCount() {
+        const input = document.getElementById("user-input").value;
+        const count = input.length;
+        document.getElementById("character-counter").textContent = `${count}/200 characters`;
+    }
+
+    // Function to get AI response based on user message
+    async function getAIResponse(userMessage) {
+        const randomResponses = [
+            "I'm here to help!",
+            "How can I assist you today?",
+            "Tell me what you'd like to know!",
+            "I'm happy to help!",
+            "Let's get started! What do you need assistance with?"
+        ];
+        const randomIndex = Math.floor(Math.random() * randomResponses.length);
+        return randomResponses[randomIndex];
+    }
+
+    // Function to clear the chat window
+    function clearChat() {
+        document.getElementById("chat-box").innerHTML = "";
+    }
+
+    // Function to toggle light/dark theme
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+    }
+
+    // Function to scroll to the bottom of the chat
+    function scrollToBottom() {
+        const chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

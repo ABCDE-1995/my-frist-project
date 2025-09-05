@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Window</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #900c3f;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #FFE5B4;
+            color: #FFFFFF;
+        }
+        .header .icon, .header .button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .header .button {
+            background-color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .header .icon-round, .header .button-round {
+            border-radius: 50%;
+        }
+        .header .search-bar {
+            width: 200px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .header .wishlist, .header .cart, .header .orders, .header .categories, .header .notifications, .header .about {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 30px;
+            margin: 5px;
+            background-color: #333;
+            border-radius: 5px;
+            color: #FFE5B4;
+        }
+        .header .wishlist i, .header .cart i, .header .notifications i {
+            margin-right: 5px;
+        }
+        .header .wishlist {
+            background-color: #ff5c8d;
+        }
+        .header .cart {
+            background-color: #4caf50;
+        }
+        .header .orders {
+            background-color: #2196f3;
+        }
+        .header .categories {
+            background-color: #ff9800;
+        }
+        .header .notifications {
+            background-color: #ffc107;
+        }
+        .header .about {
+            background-color: #ff9800;
+        }
+        .header .tab {
+            background-color: #FFE5B4;
+            color: white;
+        }
+
+        /* Categories Sidebar */
+        .categories-sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+        .categories-sidebar button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .categories-sidebar button:hover {
+            background-color: #ff7f00;
+        }
+
+        /* Electronics options container */
+        .electronics-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 250px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .electronics-options button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .electronics-options button:hover {
+            background-color: #e64a19;
+        }
+ 
+        /* Clothing options container */
+        .clothing-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 250px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .clothing-options button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .clothing-options button:hover {
+            background-color: #e64a19;
+        }
+        /* Footwear options container */
+        .footwear-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 250px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .footwear-options button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .footwear-options button:hover {
+            background-color: #e64a19;
+        }
+
+
+       /* Accessories options container */
+        .accessories-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 250px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .accessories-options button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .accessories-options button:hover {
+            background-color: #e64a19;
+        }
+   </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="button button-round icon-round">👤</button> <!-- User Login -->
+        <input type="text" class="search-bar" placeholder="Search..."> <!-- Search Bar -->
+        <button class="button button-round icon-round">🎤</button> <!-- Voice Recognition -->
+        <button class="wishlist"><i>❤️</i><b>Wish List</b></button> <!-- Wishlist -->
+        <button class="chart"><i>📊</i><b>Cart</b></button> <!-- Cart -->
+        <button class="orders"><b>My Orders</b></button> <!-- My Orders -->
+        <button class="categories" onclick="toggleCategories()"><b>Categories</b></button> <!-- Categories -->
+        <button class="notifications"><i>🔔</i><b>Notifications</b></button> <!-- Notifications -->
+        <button class="about"><a href="!DOCTYPE.html"><b>ABOUT APP</b></a></button><!-- About App -->
+    </div>
+
+<br>
+<br>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buttons Layout</title>
+    <style>
+        /* Body styles */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            height: 100vh;
+        }
+
+        /* Container for buttons */
+        .button-container {
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+
+        /* Button styling */
+        .btn {
+            display: block;
+            width: 300px;
+            height: 50px;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 50px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="button-container">
+        <button><a href="purchase order details.html" class="btn">Purchase Order Details</a></button>
+        <button><a href="stock summary.html" class="btn">Stock Summary</a></button>
+        <button><a href="top selling products.html" class="btn">Top Selling Products</a></button>
+        <button><a href="sell-in summary details.html" class="btn">Sell-In Summary</a></button>
+        <button><a href="sell-out summary details.html" class="btn">Sell-Out Summary</a></button>
+    </div>
+
+</body>
+</html>
+
+
+    <!-- Categories Sidebar -->
+    <div class="categories-sidebar" id="categoriesSidebar">
+        <button onclick="showElectronicsOptions()">Electronics</button> <!-- Electronics Button -->
+        <button onclick="showClothingOptions()">Clothing</button>
+        <button onclick="showFootwearOptions()">Footwear</button>
+        <button onclick="showAccessoriesOptions()">Accessories</button>
+        <button><a href="groceries.html">Groceries</a></button>
+    </div>
+
+    <!-- Electronics options container -->
+    <div class="electronics-options" id="electronicsOptions">
+        <button><a href="smartautomachine.html">Smart Gadgets</a></button>
+        <button><a href="homeappliances.html">Home Appliances</a></button>
+    </div>
+
+    <!-- Clothing options container -->
+    <div class="clothing-options" id="clothingOptions">
+        <button><a href="mensclothings.html">Men</a></button>
+        <button><a href="womenclothing.html">Women</a></button>
+        <button><a href="kidsclothings.html">Kids</a></button>
+    </div>
+
+   <!-- Footwear options container -->
+    <div class="footwear-options" id="footwearOptions">
+        <button><a href="mensfootwear.html">Men</a></button>
+        <button><a href="womensfootwear.html">Women</a></button>
+        <button><a href="kidsfootwear.html">Kids</a></button>
+    </div>
+
+   <!-- Accessories options container -->
+    <div class="accessories-options" id="accessoriesOptions">
+        <button><a href="mensaccesseries.html">Men</a></button>
+        <button><a href="girlsacceseries.html">Women</a></button>
+        <button><a href="kidsaccesseries.html">Kids</a></button>
+    </div>
+
+      <script>
+        function toggleCategories() {
+            const sidebar = document.getElementById('categoriesSidebar');
+            sidebar.style.display = (sidebar.style.display === 'none' || sidebar.style.display === '') ? 'block' : 'none';
+        }
+
+        function showElectronicsOptions() {
+            hideOtherOptions();
+            const options = document.getElementById('electronicsOptions');
+            options.style.display = (options.style.display === 'none' || options.style.display === '') ? 'block' : 'none';
+        }
+
+        function showClothingOptions() {
+            hideOtherOptions();
+            const options = document.getElementById('clothingOptions');
+            options.style.display = (options.style.display === 'none' || options.style.display === '') ? 'block' : 'none';
+        }
+        
+        function showFootwearOptions() {
+            hideOtherOptions();
+            const options = document.getElementById('footwearOptions');
+            options.style.display = (options.style.display === 'none' || options.style.display === '') ? 'block' : 'none';
+        }
+
+        function showAccessoriesOptions() {
+            hideOtherOptions();
+            const options = document.getElementById('accessoriesOptions');
+            options.style.display = (options.style.display === 'none' || options.style.display === '') ? 'block' : 'none';
+        }
+
+        function hideOtherOptions() {
+            document.getElementById('electronicsOptions').style.display = 'none';
+            document.getElementById('clothingOptions').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
